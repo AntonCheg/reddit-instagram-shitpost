@@ -1,0 +1,23 @@
+{
+  "name": "lodash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "0.27.2",
+    "dotenv": "16.0.1",
+    "instagram-private-api": "1.45.3",
+    "lodash": "4.17.21",
+    "mime": "3.0.0",
+    "sharp": "0.30.7"
+  }
+}
