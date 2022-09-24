@@ -69,7 +69,10 @@ class Insta {
   async getImage() {
     const id = (Math.random() * 1000) | 0;
     log(`Image metadata request. ID: ${id}`);
-    const img = await customFromReddit(this.postedMemes).then((data) => ({
+    const img = await customFromReddit({
+      ...this.postedMemes,
+      ...this.postedInMemory,
+    }).then((data) => ({
       url: data.image,
       category: data.category,
       caption: data.caption,
@@ -153,7 +156,4 @@ class Insta {
   }
 }
 
-let o = { a: '1', b: '2' };
-
-console.log(assign(o, { c: '3', a: '4' }));
 module.exports = Insta;

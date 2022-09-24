@@ -12,23 +12,24 @@ const isCorrectUrl = (url) => {
   return allowed.includes(extension);
 };
 
-const customFromReddit = async (postedMemes) => {
+const customFromReddit = async (postedMemes, after) => {
   subredditname = process.env.SUBREDDIT || 'dankmemes';
 
   let response = await axios({
-    url: 'https://www.reddit.com/r/' + subredditname + '/top.json?limit=100',
+    url: `https://www.reddit.com/r/${subredditname}/top.json?after=${after}`,
     responseType: 'json',
   });
   let memeObject = await response.data;
 
+  let actualAfter = memeObject.data.after;
   const posted = Object.values(postedMemes);
   const candidates = memeObject.data.children.filter(
-    ({ data: { url } }) => !posted.includes(url) && isCorrectUrl(url)
+    ({ data: { url, ups } }) =>
+      !posted.includes(url) && isCorrectUrl(url) && ups >= 5000
   );
 
   if (!candidates.length) {
-    console.log('NOT AVAILABLE MEMES');
-    process.exit(0);
+    return customFromReddit(postedMemes, actualAfter);
   }
 
   let postID = await candidates[Math.floor(Math.random() * candidates.length)];

@@ -16,7 +16,7 @@ const main = async () => {
 
   await post();
 
-  let a = setInterval(post, interval);
+  let a = setInterval(post, 30000);
 
   setTimeout(() => clearInterval(a), time);
 };
