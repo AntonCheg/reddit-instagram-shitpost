@@ -21,4 +21,11 @@ const main = async () => {
   setTimeout(() => clearInterval(a), time);
 };
 
-main();
+const mainSecond = async () => {
+  const insta = new Insta();
+  await insta.login();
+
+  await insta.publishSecond();
+};
+
+mainSecond();

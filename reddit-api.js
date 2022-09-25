@@ -43,6 +43,30 @@ const customFromReddit = async (postedMemes, after) => {
   return meme;
 };
 
+const customFromRedditList = async () => {
+  subredditname = process.env.SUBREDDIT || 'dankmemes';
+
+  let response = await axios({
+    url: `https://www.reddit.com/r/${subredditname}/top.json?after`,
+    responseType: 'json',
+  });
+  let memeObject = await response.data;
+
+
+  const candidates = memeObject.data.children.filter(
+    ({ data: { post_hint } }) => post_hint === 'image'
+  );
+
+  return candidates.map((post) => ({
+    image: post.data.url,
+    name: post.data.name,
+    category: post.data.link_flair_text,
+    caption: post.data.title,
+    permalink: post.data.permalink,
+    ups: post.data.ups,
+  }));
+};
+
 // const test = async () => {
 //   let response = await axios({
 //     url: 'https://www.reddit.com/r/' + 'funnyvideos' + '/top.json?limit=100',
@@ -118,4 +142,5 @@ async function main() {
 }
 
 // main();
-module.exports = customFromReddit;
+exports.customFromReddit = customFromReddit;
+exports.customFromRedditList = customFromRedditList;

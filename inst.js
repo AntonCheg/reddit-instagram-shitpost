@@ -5,7 +5,7 @@ const axios = require('axios');
 const fs = require('fs');
 const { join } = require('path');
 const { keys, assign } = require('lodash');
-const customFromReddit = require('./reddit-api');
+const { customFromReddit, customFromRedditList } = require('./reddit-api');
 
 config();
 
@@ -153,6 +153,48 @@ class Insta {
       console.warn(`width - ${width}, height - ${height}`);
       return await this.publish();
     }
+  }
+
+  async uploadToInst(data) {
+    const buffer = (
+      await axios({
+        url: data.image,
+        responseType: 'arraybuffer',
+      })
+    ).data;
+    try {
+      await this.ig.publish.photo({
+        file: buffer,
+        caption: `${
+          data.caption
+        } \n\n\nFollow @reddit.fresh.memes\nFollow @reddit.fresh.memes\nFollow @reddit.fresh.memes\n.\n.\n.\n.\n.\n${getHashtag()}`,
+      });
+      // console.warn(`width - ${width}, height - ${height}`);
+      console.warn(`SUCCES - ${data.name}`);
+      return true;
+    } catch (e) {
+      console.error(e);
+      console.warn(`${data.name}`);
+      return false;
+    }
+  }
+
+  async publishSecond() {
+    const posts = await customFromRedditList();
+
+    const rec = async (_posts) => {
+      if (!_posts?.length) {
+        return true;
+      }
+
+      const [first, ...other] = _posts;
+
+      await this.uploadToInst(first);
+
+      setTimeout(() => rec(other), 30000);
+    };
+
+    return rec(posts.splice(4));
   }
 }
 
