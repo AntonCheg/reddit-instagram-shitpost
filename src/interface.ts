@@ -1,4 +1,4 @@
-export type Publication = {
+export type PublicationType = {
   readonly is_video: boolean;
 
   readonly url: string;

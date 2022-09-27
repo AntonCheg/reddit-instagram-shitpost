@@ -1,17 +1,14 @@
-import axios from 'axios';
-import { config } from 'dotenv';
-import { IgApiClient } from 'instagram-private-api';
+import axios from "axios";
+import { IgApiClient } from "instagram-private-api";
 
-import { getPublicationsList } from './api';
-import { Publication } from './interface';
-
-config();
+import { getPublicationsList } from "./api";
+import { PublicationType } from "./interface";
 
 const getHashtag = () => {
   return ` ${process.env.HASHTAGS}`.replace(/\s/g, " #").trim();
 };
 
-const main = async () => {
+export const initInstagramClient = async () => {
   const ig = new IgApiClient();
 
   ig.state.generateDevice(process.env.IG_USERNAME!);
@@ -19,7 +16,7 @@ const main = async () => {
   await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
 
   const pub = await getPublicationsList(process.env.SUBREDDIT!);
-  const upload = async (post: Publication) => {
+  const upload = async (post: PublicationType) => {
     const buffer = (
       await axios({
         url: post.url,
@@ -54,7 +51,4 @@ const main = async () => {
   };
 
   return rec(pub);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 };
-
-main();
