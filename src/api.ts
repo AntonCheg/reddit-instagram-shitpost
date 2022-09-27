@@ -1,18 +1,23 @@
 import axios from "axios";
-import { filter, map } from "lodash";
+import { filter, map, omit } from "lodash";
 
-import { PublicationType } from "./interface";
+import { NormalizedPublicationType, PublicationApiResponseType } from "./types";
 
-export const getPublicationsList = async (subredditname: string) => {
+export const getPublicationsList = async (
+  subredditname: string
+): Promise<NormalizedPublicationType[]> => {
   const response = await axios({
     url: `https://www.reddit.com/r/${subredditname}/top.json`,
     responseType: "json",
   });
 
-  const memeObject: PublicationType[] = filter(
+  const publications: PublicationApiResponseType[] = filter(
     map(response.data.data.children, "data"),
     { is_video: false }
   );
 
-  return memeObject;
+  return map(publications, (obj) => ({
+    ...omit(obj, "is_video"),
+    isVideo: obj.is_video,
+  }));
 };

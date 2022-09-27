@@ -31,6 +31,8 @@ export class Publication extends BaseEntity {
   @Column({ default: false })
   isPosted: boolean;
 
-  @ManyToOne(() => Subreddit, (subreddit) => subreddit.publications)
+  @ManyToOne(() => Subreddit, (subreddit) => subreddit.publications, {
+    cascade: true,
+  })
   subreddit: Subreddit;
 }

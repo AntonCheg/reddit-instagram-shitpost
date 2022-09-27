@@ -1,11 +1,11 @@
-import axios from "axios";
-import { IgApiClient } from "instagram-private-api";
+import axios from 'axios';
+import { IgApiClient } from 'instagram-private-api';
 
-import { getPublicationsList } from "./api";
-import { PublicationType } from "./interface";
+import { getPublicationsList } from './api';
+import { PublicationApiResponseType } from './types';
 
 const getHashtag = () => {
-  return ` ${process.env.HASHTAGS}`.replace(/\s/g, " #").trim();
+  return ` ${process.env.HASHTAGS}`.replace(/\s/g, ' #').trim();
 };
 
 export const initInstagramClient = async () => {
@@ -16,11 +16,11 @@ export const initInstagramClient = async () => {
   await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
 
   const pub = await getPublicationsList(process.env.SUBREDDIT!);
-  const upload = async (post: PublicationType) => {
+  const upload = async (post: PublicationApiResponseType) => {
     const buffer = (
       await axios({
         url: post.url,
-        responseType: "arraybuffer",
+        responseType: 'arraybuffer',
       })
     ).data;
     try {
@@ -31,10 +31,10 @@ export const initInstagramClient = async () => {
         } \n\n\nFollow @reddit.fresh.memes\nFollow @reddit.fresh.memes\nFollow @reddit.fresh.memes\n.\n.\n.\n.\n.\n${getHashtag()}`,
       });
 
-      console.log("SUCCESS");
+      console.log('SUCCESS');
     } catch (err) {
       console.error(err);
-      console.log("ERROR");
+      console.log('ERROR');
     }
   };
 
