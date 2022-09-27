@@ -1,18 +1,18 @@
+FROM node:16 as base
 
-### Base
-FROM node:12-alpine
+WORKDIR /app
+COPY package*.json  ./
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-WORKDIR /home/node/app
+RUN npm ci --production=true
 
-COPY package.json package-lock.json posted_memes.json ./
+FROM base as builder
+WORKDIR /app
+COPY . .
+RUN npm ci --production=false
+RUN npm run build
 
-USER node
-
-RUN npm install
-
-COPY --chown=node:node . .
-
-EXPOSE 8080
-
-CMD [ "node", "index.js" ]
+### Runner
+FROM base
+ENV NODE_ENV production
+COPY --from=builder /app/dist ./dist
+CMD npm run prod

@@ -1,16 +1,18 @@
 import 'reflect-metadata';
 
+import ms from 'ms';
+
 import { dataSource } from './db/db-config';
-import { initInstagramClient } from './inst';
+import { uploadWrapper } from './inst';
 
 async function main() {
   await dataSource.initialize();
 
-  const a = await initInstagramClient();
+  const upload = await uploadWrapper();
 
-  const aa = setInterval(a, 60000);
+  const intervalTimer = setInterval(upload, ms(process.env.INTERVAL));
 
-  setTimeout(() => clearInterval(aa), 300000);
+  setTimeout(() => clearInterval(intervalTimer), ms(process.env.TIME));
 }
 
 main();

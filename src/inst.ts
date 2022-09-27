@@ -8,7 +8,7 @@ const getHashtag = () => {
   return ` ${process.env.HASHTAGS}`.replace(/\s/g, ' #').trim();
 };
 
-export const initInstagramClient = async () => {
+export const uploadWrapper = async () => {
   const ig = new IgApiClient();
 
   ig.state.generateDevice(process.env.IG_USERNAME!);
@@ -16,6 +16,10 @@ export const initInstagramClient = async () => {
   await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
 
   const upload = async () => {
+    console.log('='.repeat(50));
+    console.log('START UPLOAD');
+    console.log('='.repeat(50));
+
     let pub = await Publication.findPending();
     if (!pub) {
       uploadNewPublication();
@@ -43,6 +47,10 @@ export const initInstagramClient = async () => {
       console.error(err);
       console.log('ERROR');
     }
+
+    console.log('='.repeat(50));
+    console.log('END UPLOAD');
+    console.log('='.repeat(50));
   };
 
   return upload;
