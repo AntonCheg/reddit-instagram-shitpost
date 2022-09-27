@@ -3,3 +3,4 @@ node_modules
 posted_memes.json
 posted_memes_new.json
 .env
+build
